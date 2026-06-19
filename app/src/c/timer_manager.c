@@ -20,12 +20,12 @@ static StoredTimer s_timers[MAX_TIMERS];
 static uint8_t s_timer_count = 0;
 
 static void prv_vibe_timer(void) {
-  static const uint32_t segments[] = {200, 100, 200, 100, 400};
-  VibeInfo info = {
+  static uint32_t segments[] = {200, 100, 200, 100, 400};
+  VibePattern pattern = {
     .durations = segments,
-    .num_segments = 5,
+    .num_segments = ARRAY_LENGTH(segments),
   };
-  vibes_enqueue_custom(info);
+  vibes_enqueue_custom_pattern(pattern);
 }
 
 static void prv_save_timers(void) {
