@@ -1,0 +1,6 @@
+app/build/
+app/node_modules/
+app/.lock-waf_*
+service/merlin-service
+*.pbw
+.DS_Store

@@ -1,0 +1,47 @@
+{
+  "name": "merlin",
+  "author": "Merlin",
+  "version": "1.0.0",
+  "keywords": ["pebble-app"],
+  "private": true,
+  "dependencies": {
+    "@rebble/clay": "^1.0.6"
+  },
+  "pebble": {
+    "displayName": "Merlin",
+    "uuid": "f4e8a1c2-9b3d-4f7e-a6c5-2d8e1f0b3a94",
+    "sdkVersion": "3",
+    "enableMultiJS": true,
+    "capabilities": ["configurable", "location"],
+    "targetPlatforms": ["emery"],
+    "watchapp": {
+      "watchface": false
+    },
+    "messageKeys": [
+      "DICTATION_TEXT",
+      "FEEDBACK_TEXT",
+      "FEEDBACK_FLAG",
+      "RESPONSE",
+      "RESPONSE_DONE",
+      "STATUS",
+      "TIMER_DURATION",
+      "TIMER_NAME"
+    ],
+    "resources": {
+      "media": [
+        {
+          "type": "bitmap",
+          "name": "IMAGE_MENU_ICON",
+          "file": "icons/menu_icon.png",
+          "menuIcon": true
+        },
+        {
+          "type": "bitmap",
+          "name": "IMAGE_WIZARD",
+          "file": "images/wizard.png",
+          "memoryFormat": "smallest"
+        }
+      ]
+    }
+  }
+}
