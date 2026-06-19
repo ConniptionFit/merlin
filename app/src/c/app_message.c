@@ -4,6 +4,7 @@
 
 #define OUTBOX_RETRY_MAX 5
 #define OUTBOX_RETRY_BASE_MS 50
+#define APP_MESSAGE_BUFFER_SIZE 2048
 
 static AppMessageCallbacks s_callbacks;
 static AppTimer *s_outbox_retry_timer = NULL;
@@ -11,9 +12,13 @@ static char s_pending_text[512];
 static bool s_pending_feedback = false;
 static int s_outbox_retry_attempt = 0;
 
+static bool prv_tuple_has_cstring(const Tuple *tuple) {
+  return tuple && tuple->type == TUPLE_CSTRING && tuple->length > 1;
+}
+
 static void prv_dispatch_inbox(DictionaryIterator *iter) {
   Tuple *tuple = dict_find(iter, MESSAGE_KEY_RESPONSE);
-  if (tuple && tuple->value->cstring) {
+  if (prv_tuple_has_cstring(tuple)) {
     if (s_callbacks.on_response_chunk) {
       s_callbacks.on_response_chunk(tuple->value->cstring);
     }
@@ -27,7 +32,7 @@ static void prv_dispatch_inbox(DictionaryIterator *iter) {
   }
 
   tuple = dict_find(iter, MESSAGE_KEY_STATUS);
-  if (tuple && tuple->value->cstring) {
+  if (prv_tuple_has_cstring(tuple)) {
     if (s_callbacks.on_status) {
       s_callbacks.on_status(tuple->value->cstring);
     }
@@ -37,7 +42,7 @@ static void prv_dispatch_inbox(DictionaryIterator *iter) {
   if (tuple) {
     const char *name = NULL;
     Tuple *name_tuple = dict_find(iter, MESSAGE_KEY_TIMER_NAME);
-    if (name_tuple && name_tuple->value->cstring) {
+    if (prv_tuple_has_cstring(name_tuple)) {
       name = name_tuple->value->cstring;
     }
     if (s_callbacks.on_timer) {
@@ -50,10 +55,8 @@ static void prv_inbox_received(DictionaryIterator *iter, void *context) {
   prv_dispatch_inbox(iter);
 }
 
-static void prv_inbox_dropped(AppMessageResult reason, DictionaryIterator *iter, void *context) {
-  if (iter) {
-    prv_dispatch_inbox(iter);
-  }
+static void prv_inbox_dropped(AppMessageResult reason, void *context) {
+  APP_LOG(APP_LOG_LEVEL_WARNING, "Inbox dropped: %d", reason);
 }
 
 static void prv_outbox_failed(DictionaryIterator *iter, AppMessageResult reason, void *context) {
@@ -102,14 +105,22 @@ static void prv_outbox_retry(void *data) {
 }
 
 void app_message_init(void) {
+  uint32_t inbox_size = APP_MESSAGE_BUFFER_SIZE;
+  uint32_t outbox_size = APP_MESSAGE_BUFFER_SIZE;
+  uint32_t inbox_max = app_message_inbox_size_maximum();
+  uint32_t outbox_max = app_message_outbox_size_maximum();
+  if (inbox_size > inbox_max) {
+    inbox_size = inbox_max;
+  }
+  if (outbox_size > outbox_max) {
+    outbox_size = outbox_max;
+  }
+  app_message_open(inbox_size, outbox_size);
+
   app_message_register_inbox_received(prv_inbox_received);
   app_message_register_inbox_dropped(prv_inbox_dropped);
   app_message_register_outbox_failed(prv_outbox_failed);
   app_message_register_outbox_sent(prv_outbox_sent);
-
-  const uint32_t size = 2048;
-  app_message_inbox_size_maximum_set(size);
-  app_message_outbox_size_maximum_set(size);
 }
 
 void app_message_set_callbacks(const AppMessageCallbacks *callbacks) {
@@ -141,5 +152,5 @@ void app_message_send_dictation(const char *text, bool feedback) {
 }
 
 StatusCode app_message_send_with_retry(DictionaryIterator *iter) {
-  return app_message_outbox_send();
+  return (StatusCode)app_message_outbox_send();
 }

@@ -38,12 +38,12 @@ static void prv_dictation_status_callback(DictationSession *session, DictationSe
                                           char *transcription, void *context);
 
 static void prv_vibe_done(void) {
-  static const uint32_t segments[] = {50, 50, 100};
-  VibeInfo info = {
+  static uint32_t segments[] = {50, 50, 100};
+  VibePattern pattern = {
     .durations = segments,
-    .num_segments = 3,
+    .num_segments = ARRAY_LENGTH(segments),
   };
-  vibes_enqueue_custom(info);
+  vibes_enqueue_custom_pattern(pattern);
 }
 
 static void prv_heap_warmup(void) {
@@ -56,6 +56,16 @@ static void prv_heap_warmup(void) {
 static void prv_update_response_text(SessionWindow *sw) {
   text_layer_set_text(sw->response_layer, sw->response_text);
   prv_refresh_scroll(sw);
+}
+
+static void prv_scroll_to_bottom(ScrollLayer *scroll_layer) {
+  GSize content_size = scroll_layer_get_content_size(scroll_layer);
+  GRect frame = layer_get_bounds(scroll_layer_get_layer(scroll_layer));
+  int16_t max_offset_y = content_size.h - frame.size.h;
+  if (max_offset_y < 0) {
+    max_offset_y = 0;
+  }
+  scroll_layer_set_content_offset(scroll_layer, GPoint(0, max_offset_y), false);
 }
 
 static void prv_refresh_scroll(SessionWindow *sw) {
@@ -80,7 +90,7 @@ static void prv_refresh_scroll(SessionWindow *sw) {
   }
   layer_set_frame(sw->scroll_content, GRect(0, 0, bounds.size.w, content_height));
   scroll_layer_set_content_size(sw->scroll_layer, GSize(bounds.size.w, content_height));
-  scroll_layer_scroll_to_bottom(sw->scroll_layer, false);
+  prv_scroll_to_bottom(sw->scroll_layer);
 }
 
 static void prv_set_status(SessionWindow *sw, const char *status) {
