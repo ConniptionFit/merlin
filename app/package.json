@@ -39,7 +39,7 @@
           "type": "bitmap",
           "name": "IMAGE_WIZARD",
           "file": "images/wizard.png",
-          "memoryFormat": "smallest"
+          "spaceOptimization": "memory"
         }
       ]
     }
