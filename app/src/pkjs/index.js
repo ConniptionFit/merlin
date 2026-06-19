@@ -18,21 +18,14 @@ Pebble.addEventListener('webviewclosed', function(e) {
     api.storeGeminiKey(settings.GeminiApiKey);
     delete settings.GeminiApiKey;
   }
-  if (settings.BackendUrl) {
-    api.storeBackendUrl(settings.BackendUrl);
-    delete settings.BackendUrl;
-  }
 });
 
 Pebble.addEventListener('ready', function() {
-  console.log('Merlin PKJS ready');
+  console.log('Merlin PKJS ready (direct Gemini API)');
   try {
     var saved = JSON.parse(localStorage.getItem('clay-settings'));
     if (saved && saved.GeminiApiKey) {
       api.storeGeminiKey(saved.GeminiApiKey);
-    }
-    if (saved && saved.BackendUrl) {
-      api.storeBackendUrl(saved.BackendUrl);
     }
   } catch (err) {
     console.log('No saved Clay settings yet');
