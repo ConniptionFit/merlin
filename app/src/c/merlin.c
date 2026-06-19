@@ -1,6 +1,7 @@
 #include <pebble.h>
 
 #include "app_message.h"
+#include "launch_window.h"
 #include "session_window.h"
 #include "timer_manager.h"
 
@@ -36,7 +37,7 @@ int main(void) {
     return 0;
   }
 
-  session_window_push();
+  launch_window_push();
   app_event_loop();
   return 0;
 }

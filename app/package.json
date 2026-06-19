@@ -37,9 +37,40 @@
         },
         {
           "type": "bitmap",
-          "name": "IMAGE_WIZARD",
-          "file": "images/wizard.png",
+          "name": "IMAGE_MERLIN_HEAD",
+          "file": "images/merlin_head.png",
           "spaceOptimization": "memory"
+        },
+        {
+          "type": "bitmap",
+          "name": "IMAGE_MERLIN_SLEEP",
+          "file": "images/merlin_sleep.png",
+          "spaceOptimization": "memory"
+        },
+        {
+          "type": "bitmap",
+          "name": "IMAGE_ICON_HELP",
+          "file": "icons/help.png"
+        },
+        {
+          "type": "bitmap",
+          "name": "IMAGE_ICON_MIC",
+          "file": "icons/mic.png"
+        },
+        {
+          "type": "bitmap",
+          "name": "IMAGE_ICON_MORE",
+          "file": "icons/more.png"
+        },
+        {
+          "type": "bitmap",
+          "name": "IMAGE_ICON_SNOOZE",
+          "file": "icons/snooze.png"
+        },
+        {
+          "type": "bitmap",
+          "name": "IMAGE_ICON_DISMISS",
+          "file": "icons/dismiss.png"
         }
       ]
     }

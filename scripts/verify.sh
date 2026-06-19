@@ -20,7 +20,10 @@ for f in \
   app/package.json \
   app/wscript \
   app/src/c/merlin.c \
+  app/src/c/launch_window.c \
   app/src/c/session_window.c \
+  app/src/c/speech_bubble_layer.c \
+  app/src/c/help_window.c \
   app/src/c/wizard_layer.c \
   app/src/c/timer_manager.c \
   app/src/c/app_message.c \
@@ -28,7 +31,11 @@ for f in \
   app/src/pkjs/api.js \
   app/src/pkjs/timeline.js \
   app/src/pkjs/lib/message_queue.js \
-  app/resources/images/wizard.png \
+  app/resources/images/merlin_head.png \
+  app/resources/images/merlin_sleep.png \
+  app/resources/icons/help.png \
+  app/resources/icons/mic.png \
+  app/resources/icons/more.png \
   app/resources/icons/menu_icon.png \
   service/main.go \
   service/handler/query.go \
